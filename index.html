@@ -1,0 +1,39 @@
+<form id="form">
+	<input id="input">
+	<input type="submit">
+</form>
+<div id="spravy"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	// var socket = io()
+
+	socket.on('message receive', function(msg) {
+		document.getElementById('spravy').innerHTML += '<br>' + msg
+	});
+
+
+	// document.getElementById('form').addEventListener('submit', function(e) {
+	// 	e.preventDefault()
+
+	// 	socket.emit('message send', document.getElementById('input').value)
+	// })
+
+	// ws = io()
+	ws = new WebSocket('ws://localhost:3000')
+
+	// socket.on(...)
+	ws.onmessage = function(event) {
+		switch(event.data.type) {
+			case 'message receive':
+				document.getElementById('spravy').innerHTML += '<br>' + event.data.msg
+			break
+		}
+	}
+
+	// socket.emit(...)
+	ws.send(JSON.stringify({
+		type: 'message send',
+		msg: document.getElementById('input').value
+	}))
+</script>
